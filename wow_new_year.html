@@ -34,19 +34,20 @@ canvas{
 .container{
     position:relative;
     z-index:2;
+    width:90%;
     max-width:900px;
-    padding:40px;
+    padding:clamp(20px,4vw,40px);
 }
 
 .title{
-    font-size:75px;
+    font-size:clamp(36px,8vw,75px);
     font-weight:bold;
     background:linear-gradient(90deg,#ff0000,#ff9900,#ffff00,#ff0000);
     background-size:400%;
     -webkit-background-clip:text;
     -webkit-text-fill-color:transparent;
     animation:fireText 2.5s linear infinite;
-    text-shadow:0 0 40px red,0 0 80px orange;
+    text-shadow:0 0 30px red,0 0 60px orange;
 }
 
 @keyframes fireText{
@@ -55,15 +56,15 @@ canvas{
 }
 
 .poem{
-    margin-top:40px;
-    font-size:22px;
-    line-height:1.8;
+    margin-top:clamp(20px,4vw,40px);
+    font-size:clamp(16px,4vw,22px);
+    line-height:1.7;
     color:#ffe6cc;
-    animation:fadeIn 3s ease-in-out;
+    animation:fadeIn 2.5s ease-in-out;
 }
 
 @keyframes fadeIn{
-    from{opacity:0;transform:translateY(30px);}
+    from{opacity:0;transform:translateY(20px);}
     to{opacity:1;transform:translateY(0);}
 }
 </style>
@@ -98,42 +99,49 @@ canvas{
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+function resizeCanvas(){
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+}
+resizeCanvas();
 
 let rockets=[];
 let particles=[];
+
+const isMobile = window.innerWidth < 768;
+const PARTICLE_COUNT = isMobile ? 150 : 300;
+const ROCKET_INTERVAL = isMobile ? 500 : 300;
 
 function createRocket(x=Math.random()*canvas.width){
     rockets.push({
         x:x,
         y:canvas.height,
-        speed:7+Math.random()*3,
+        speed:6+Math.random()*2,
         explodeHeight:Math.random()*canvas.height/1.5
     });
 }
 
 function explode(x,y){
-    for(let i=0;i<300;i++){   // Tăng mật độ nổ
+    for(let i=0;i<PARTICLE_COUNT;i++){
         particles.push({
             x,y,
             radius:2,
             color:`hsl(${Math.random()*360},100%,60%)`,
-            speed:Math.random()*8,
+            speed:Math.random()*7,
             angle:Math.random()*Math.PI*2,
-            life:140
+            life:120
         });
     }
 }
 
 function update(){
-    ctx.fillStyle="rgba(0,0,0,0.2)";
+    ctx.fillStyle="rgba(0,0,0,0.25)";
     ctx.fillRect(0,0,canvas.width,canvas.height);
 
     rockets.forEach((r,i)=>{
         r.y-=r.speed;
         ctx.fillStyle="white";
-        ctx.fillRect(r.x,r.y,3,12);
+        ctx.fillRect(r.x,r.y,3,10);
 
         if(r.y<=r.explodeHeight){
             explode(r.x,r.y);
@@ -160,22 +168,17 @@ function update(){
     requestAnimationFrame(update);
 }
 
-// Bắn pháo liên tục dày hơn
-setInterval(()=>createRocket(),300);
+setInterval(()=>createRocket(),ROCKET_INTERVAL);
 
-// Click bắn siêu pháo
 window.addEventListener("click",e=>{
-    for(let i=0;i<5;i++){
+    for(let i=0;i<3;i++){
         createRocket(e.clientX);
     }
 });
 
 update();
 
-window.addEventListener("resize",()=>{
-    canvas.width=window.innerWidth;
-    canvas.height=window.innerHeight;
-});
+window.addEventListener("resize",resizeCanvas);
 </script>
 
 </body>
