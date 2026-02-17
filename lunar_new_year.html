@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 Năm Mới Rực Cháy 🔥</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    height: 100vh;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #1a0000 0%, #000000 70%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.container {
+    z-index: 2;
+    padding: 40px;
+    max-width: 900px;
+}
+
+.title {
+    font-size: 60px;
+    font-weight: bold;
+    background: linear-gradient(90deg, gold, orange, red, gold);
+    background-size: 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glow 3s infinite linear;
+}
+
+@keyframes glow {
+    0% { background-position: 0%; }
+    100% { background-position: 300%; }
+}
+
+.subtitle {
+    margin-top: 20px;
+    font-size: 22px;
+    color: #ffcc66;
+    animation: fadeIn 3s ease-in-out;
+}
+
+.poem {
+    margin-top: 40px;
+    font-size: 20px;
+    line-height: 1.8;
+    color: #ffffff;
+    animation: fadeIn 5s ease-in-out;
+}
+
+.countdown {
+    margin-top: 30px;
+    font-size: 26px;
+    color: #ff4444;
+    font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+    <div class="title">🔥 CHÚC MỪNG NĂM MỚI 🔥</div>
+    <div class="subtitle">Một năm mới – Một phiên bản tốt hơn của chính mình</div>
+
+    <div class="poem">
+        Xuân về thắp lửa giữa trời đêm,<br>
+        Từng đốm sáng bừng lên ước mơ mềm.<br>
+        Gió mới gọi tên bao khát vọng,<br>
+        Lòng người rực cháy tựa than hồng.<br><br>
+
+        Chúc năm mới hệ thống luôn xanh,<br>
+        Code gọn gàng, deploy an lành.<br>
+        AI đồng hành nâng tầm trí tuệ,<br>
+        Thành công bền vững, bước quang vinh.<br><br>
+
+        Mỗi sáng thức dậy đầy năng lượng,<br>
+        Mỗi dòng commit chứa yêu thương.<br>
+        Monitoring không còn báo đỏ,<br>
+        Cuộc đời mở lối sáng muôn phương.
+    </div>
+
+    <div class="countdown" id="clock"></div>
+</div>
+
+<script>
+const canvas = document.getElementById("fireworks");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+
+function createFirework() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height / 2;
+
+    for (let i = 0; i < 120; i++) {
+        particles.push({
+            x: x,
+            y: y,
+            radius: 2,
+            color: `hsl(${Math.random()*360}, 100%, 50%)`,
+            speed: Math.random()*6,
+            angle: Math.random()*2*Math.PI,
+            life: 100
+        });
+    }
+}
+
+function updateParticles() {
+    particles.forEach((p, i) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.life--;
+
+        if (p.life <= 0) {
+            particles.splice(i, 1);
+        }
+    });
+}
+
+function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+    });
+}
+
+function animate() {
+    updateParticles();
+    drawParticles();
+    requestAnimationFrame(animate);
+}
+
+setInterval(createFirework, 700);
+animate();
+
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+// Clock
+function updateClock() {
+    const now = new Date();
+    document.getElementById("clock").innerText =
+        "🕒 " + now.toLocaleString("vi-VN");
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+
+</body>
+</html>
